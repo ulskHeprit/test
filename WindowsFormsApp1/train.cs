@@ -15,118 +15,87 @@ namespace WindowsFormsApp1
         Right
     }
 
-    class Train
+    class Train : Trainabstract
     {
-        //start position
-        private float startPosX;
-        private float startPosY;
-        //picture resolution
-        private int pictureWidth;
-        private int pictureHeight;
-        //object features
-        private const int trainWidth = 100;
-        private const int trainHeight = 40;
-        public int MaxSpeed { private set; get; }
-        public float Weight { private set; get; }        //object color        public Color MainColor { private set; get; }
-        public Color DopColor { private set; get; }
-        public Color CarriageColor { private set; get; }
-        //object acc.
-        public bool FrontLight { private set; get; }
-        public bool Carriage { private set; get; }
+        protected const int trainWidth = 200;
+        protected const int trainHeight = 60;
+        public Train(int maxSpeed, int weight, Color mainColor, Color windowColor)
+        {
+            MaxSpeed = maxSpeed;//макс скорость
+            Weight = weight;//вес
+            MainColor = mainColor;//цвет первого вагона
+            WindowColor = windowColor;//цвет окон
+        }
 
-        public Train(int maxSpeed, float weight, Color mainColor, Color dopColor, Color carriageColor, bool frontLight, bool carriage)
+        public Train(string info)
         {
-            MaxSpeed = maxSpeed;
-            Weight = weight;
-            MainColor = mainColor;
-            DopColor = dopColor;
-            CarriageColor = carriageColor;
-            FrontLight = frontLight;
-            Carriage = carriage;
-        }        public void SetPosition(int x, int y, int width, int height)
-        {
-            startPosX = x;
-            startPosY = y;
-            pictureWidth = width;
-            pictureHeight = height;
-        }        public void MoveTransport(Direction direction)
+            string[] str = info.Split(';');
+            if(str.Length == 4)
+            {
+                MaxSpeed = Convert.ToInt32(str[0]);
+                Weight = Convert.ToInt32(str[1]);
+                MainColor = Color.FromName(str[2]);
+                WindowColor = Color.FromName(str[3]);
+            }
+        }
+
+        public override void MoveTrain(Direction direction)
         {
             float step = MaxSpeed * 100 / Weight;
-            switch (direction)
-            {
-                // вправо
+            switch(direction)
+            { //поезд двигается только вперед и назад
                 case Direction.Right:
-                    if (startPosX + step < pictureWidth - trainWidth)
+                    if(_startPosX+step<_pictureWidth-trainWidth)//проверка на выход за правую границу
                     {
-                        startPosX += step;
+                        _startPosX += step;
                     }
                     break;
-                //влево
-                case Direction.Left:
-                    if (startPosX - step > 0)
+                case Direction.Left://проверка на выход за левую границу
+                    if (_startPosX-step>0)
                     {
-                        startPosX -= step;
+                        _startPosX -= step;
                     }
                     break;
+                /*case Direction.Up:
+                    if(_startPosY-step>0)
+                    {
+                        _startPosY -= step;
+                    }
+                    break;
+                case Direction.Down:
+                    if(_startPosY-step<_pictureheight-trainHeight)
+                    {
+                        _startPosY += step;
+                    }
+                    break;*/
             }
-        }        public void DrawCar(Graphics g)
+        }
+        public override void DrawTrain(Graphics g)//рисуем только первый вагон, рельсы, траву, рельсы, столбы, линию электропередач
         {
-            Pen pen = new Pen(Color.Black,2);
+            Pen pen = new Pen(Color.Black, 2);
             Pen pen2 = new Pen(Color.Black, 1);
             Brush test = new SolidBrush(MainColor);
-            Brush test2 = new SolidBrush(DopColor);
+            Brush test2 = new SolidBrush(WindowColor);
             Brush grass = new SolidBrush(Color.Green);
             Brush column = new SolidBrush(Color.Gray);
-            Brush carriagecolor = new SolidBrush(CarriageColor);
-            if (FrontLight)
-            {
-                g.FillRectangle(Brushes.MidnightBlue, 0, 0, 900, 500);
-            }
-            g.FillRectangle(column, 51, startPosY, 4, 60);//columns
-            g.DrawRectangle(pen2, 50, startPosY, 5, 60);
-            g.FillRectangle(column, 251, startPosY, 4, 60);
-            g.DrawRectangle(pen2, 250, startPosY, 5, 60);
-            g.FillRectangle(column, 451, startPosY, 4, 60);
-            g.DrawRectangle(pen2, 450, startPosY, 5, 60);
-            g.FillRectangle(column, 651, startPosY, 4, 60);
-            g.DrawRectangle(pen2, 650, startPosY, 5, 60);
-            g.FillRectangle(column, 851, startPosY, 4, 60);
-            g.DrawRectangle(pen2, 850, startPosY, 5, 60);
-            g.DrawLine(pen2, 0, startPosY + 8, FormForTrain.ActiveForm.Size.Width, startPosY + 8);//линия электропередач
-            g.DrawLine(pen, 0, startPosY + 52, FormForTrain.ActiveForm.Size.Width, startPosY + 52);//рельсы
-            g.FillRectangle(grass, 0,startPosY+53, FormForTrain.ActiveForm.Size.Width, 500-startPosY);//трава
+            g.DrawRectangle(pen, _startPosX + 20, _startPosY + 20, 50, 20);//borders
+            g.DrawEllipse(pen, _startPosX + 10, _startPosY + 20, 20, 20);//граница носа
+            g.DrawEllipse(pen, _startPosX + 25, _startPosY + 40, 10, 10);//граница колес
+            g.DrawEllipse(pen, _startPosX + 55, _startPosY + 40, 10, 10);
+            g.FillEllipse(test, _startPosX + 10, _startPosY + 20, 20, 20);//nose
+            g.FillEllipse(test, _startPosX + 25, _startPosY + 40, 10, 10); //whells
+            g.FillEllipse(test, _startPosX + 55, _startPosY + 40, 10, 10);
+            g.FillRectangle(test, _startPosX + 20, _startPosY + 20, 50, 20);//main rectangle
+            g.DrawLine(pen, _startPosX + 40, _startPosY + 20, _startPosX + 50, _startPosY + 10);//рога
+            g.DrawLine(pen, _startPosX + 45, _startPosY + 10, _startPosX + 55, _startPosY + 10);
+            g.FillRectangle(test2, _startPosX + 25, _startPosY + 23, 40, 8);//окно с границей
+            g.DrawRectangle(pen2, _startPosX + 25, _startPosY + 23, 40, 8);
+        }
 
-            if (FrontLight)
-            {
-                Brush brushforlight = new SolidBrush(Color.Yellow);
-                g.FillPie(brushforlight, startPosX - 35, startPosY + 20, 100, 20, 160, 40);
-            }
-            g.DrawRectangle(pen, startPosX + 20, startPosY + 20, 50, 20);//borders
-            g.DrawEllipse(pen, startPosX + 10, startPosY + 20, 20, 20);//граница носа
-            g.DrawEllipse(pen, startPosX + 25, startPosY + 40, 10, 10);//граница колес
-            g.DrawEllipse(pen, startPosX + 55, startPosY + 40, 10, 10);
-            g.FillEllipse(test, startPosX + 10, startPosY + 20, 20, 20);//nose
-            g.FillEllipse(test, startPosX + 25, startPosY + 40, 10, 10); //whells
-            g.FillEllipse(test, startPosX + 55, startPosY + 40, 10, 10);
-            g.FillRectangle(test, startPosX + 20, startPosY + 20, 50, 20);//main rectangle
-            g.DrawLine(pen, startPosX + 40, startPosY + 20, startPosX + 50, startPosY + 10);//рога
-            g.DrawLine(pen, startPosX + 45, startPosY + 10, startPosX + 55, startPosY + 10);
-            g.FillRectangle(test2, startPosX + 25, startPosY + 23, 40, 8);//окно с границей
-            g.DrawRectangle(pen2, startPosX + 25, startPosY + 23, 40, 8);
-            if (Carriage)//вагон
-            {
-                g.DrawLine(pen, startPosX + 70, startPosY + 35, startPosX + 80, startPosY + 35);//перемычка+рога
-                g.DrawLine(pen, startPosX + 100, startPosY + 20, startPosX + 110, startPosY + 10);
-                g.DrawLine(pen, startPosX + 105, startPosY + 10, startPosX + 115, startPosY + 10);
-                g.DrawRectangle(pen, startPosX + 80, startPosY + 20, 50, 20);//границы
-                g.DrawEllipse(pen, startPosX + 85, startPosY + 40, 10, 10);
-                g.DrawEllipse(pen, startPosX + 115, startPosY + 40, 10, 10);
-                g.FillRectangle(carriagecolor, startPosX + 80, startPosY + 20, 50, 20);//зиливка вагона+окно
-                g.FillRectangle(test2, startPosX + 85, startPosY + 23, 40, 8);
-                g.DrawRectangle(pen2, startPosX + 85, startPosY + 23, 40, 8);
-                g.FillEllipse(test, startPosX + 85, startPosY + 40, 10, 10);//колеса
-                g.FillEllipse(test, startPosX + 115, startPosY + 40, 10, 10);
-            }
-        }
+        public override string ToString()
+        {
+            return MaxSpeed+";"+Weight+";"+MainColor.Name+";"+WindowColor.Name;
+        }
+
     }
 }

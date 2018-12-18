@@ -32,6 +32,7 @@
             this.buttonCreate = new System.Windows.Forms.Button();
             this.buttonLeft = new System.Windows.Forms.Button();
             this.buttonRight = new System.Windows.Forms.Button();
+            this.create_lokomotive = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForTrain)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,11 +47,11 @@
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(0, 431);
+            this.buttonCreate.Location = new System.Drawing.Point(0, 421);
             this.buttonCreate.Name = "buttonCreate";
-            this.buttonCreate.Size = new System.Drawing.Size(60, 30);
+            this.buttonCreate.Size = new System.Drawing.Size(60, 40);
             this.buttonCreate.TabIndex = 1;
-            this.buttonCreate.Text = "Create";
+            this.buttonCreate.Text = "Create base";
             this.buttonCreate.UseVisualStyleBackColor = true;
             this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
             // 
@@ -76,11 +77,22 @@
             this.buttonRight.UseVisualStyleBackColor = true;
             this.buttonRight.Click += new System.EventHandler(this.buttonMove_Click);
             // 
+            // create_lokomotive
+            // 
+            this.create_lokomotive.Location = new System.Drawing.Point(67, 421);
+            this.create_lokomotive.Name = "create_lokomotive";
+            this.create_lokomotive.Size = new System.Drawing.Size(64, 40);
+            this.create_lokomotive.TabIndex = 4;
+            this.create_lokomotive.Text = "Create train";
+            this.create_lokomotive.UseVisualStyleBackColor = true;
+            this.create_lokomotive.Click += new System.EventHandler(this.create_lokomotive_Click);
+            // 
             // FormForTrain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 461);
+            this.Controls.Add(this.create_lokomotive);
             this.Controls.Add(this.buttonRight);
             this.Controls.Add(this.buttonLeft);
             this.Controls.Add(this.buttonCreate);
@@ -99,6 +111,7 @@
         private System.Windows.Forms.Button buttonCreate;
         private System.Windows.Forms.Button buttonLeft;
         private System.Windows.Forms.Button buttonRight;
+        private System.Windows.Forms.Button create_lokomotive;
     }
 }
 

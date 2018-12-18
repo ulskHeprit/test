@@ -12,27 +12,45 @@ namespace WindowsFormsApp1
 {
     public partial class FormForTrain : Form
     {
+        private ITransport train1; //ссылка на объект интерфейса
+        Bitmap bmp;//битмап
+        Graphics gr;//рисовалка
+        Color mainColor, windowColor, carriageColor;//цвета: первого вагона, окон, второго вагона
+        bool lights, carriage;//флаги света фар, второго вагона
         public FormForTrain()
         {
             InitializeComponent();
+            bmp = new Bitmap(pictureBoxForTrain.Width, pictureBoxForTrain.Height);//присваивание значений переменным
+            gr = Graphics.FromImage(bmp);
+            mainColor = Color.Tomato;
+            windowColor = Color.Gray;
+            lights = true;
+            carriage = true;
+            carriageColor = Color.Green;
         }
-
-        private Train train;
+        
 
         private void Draw()
         {
-            Bitmap bmp = new Bitmap(pictureBoxForTrain.Width, pictureBoxForTrain.Height);
-            Graphics gr = Graphics.FromImage(bmp);
-            train.DrawCar(gr);
-            pictureBoxForTrain.Image = bmp;
+
+            gr.FillRectangle(Brushes.White, 0, 0, 900, 500);//очистка битмапа белым закрашенным прямоугольником
+            train1.DrawTrain(gr);//рисовка
+            pictureBoxForTrain.Image = bmp;//вывод картинки на форму
         }
 
         private void buttonCreate_Click(object sender, EventArgs e)
         {
-            Random rnd = new Random();
-            train = new Train(rnd.Next(100, 300), rnd.Next(1000, 2000), Color.Blue,
-            Color.Red, Color.Blue, true, true);
-            train.SetPosition(rnd.Next(10, 100)+600, rnd.Next(10, 400), pictureBoxForTrain.Width, pictureBoxForTrain.Height);
+            Random rnd = new Random(); // создание базового поезда из базового класса Train
+            train1 = new Train(1000,10000,Color.Gray,Color.CadetBlue);
+            train1.SetPosition(rnd.Next(10, 100)+600, rnd.Next(10, 400), pictureBoxForTrain.Width, pictureBoxForTrain.Height);
+            Draw();
+        }
+
+        private void create_lokomotive_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random(); // создание локомотива из класса locomotive
+            train1 = new locomotive(1000, 10000, mainColor, windowColor, lights, carriage, carriageColor);
+            train1.SetPosition(rnd.Next(10, 100) + 600, rnd.Next(10, 400), pictureBoxForTrain.Width, pictureBoxForTrain.Height);
             Draw();
         }
 
@@ -41,21 +59,23 @@ namespace WindowsFormsApp1
             //получаем имя кнопки
             string name = (sender as Button).Name;
             switch (name)
-            {
+            { /*поезда двигаются только вперед и назад
                 case "buttonUp":
-                    train.MoveTransport(Direction.Up);
+                    train1.MoveTrain(Direction.Up);
                     break;
                 case "buttonDown":
-                    train.MoveTransport(Direction.Down);
-                    break;
+                    train1.MoveTrain(Direction.Down);
+                    break;*/
                 case "buttonLeft":
-                    train.MoveTransport(Direction.Left);
+                    train1.MoveTrain(Direction.Left);
                     break;
                 case "buttonRight":
-                    train.MoveTransport(Direction.Right);
+                    train1.MoveTrain(Direction.Right);
                     break;
             }
             Draw();
         }
+
+        
     }
 }

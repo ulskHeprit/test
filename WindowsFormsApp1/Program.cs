@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
+
+    public delegate void trainDelegate(ITransport train);
+
     static class Program
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace WindowsFormsApp1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new FormDepo());
         }
     }
 }
